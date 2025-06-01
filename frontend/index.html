@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CredScanner - Fake News Detector</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      font-size: 18px;
+      background: white;
+      border-left: 5px solid #2196F3;
+    }
+
+    .fake { border-color: red; color: red; }
+    .real { border-color: green; color: green; }
+  </style>
+</head>
+<body>
+
+  <h1>CredScanner 🔍</h1>
+  <p>Enter a news headline or article URL:</p>
+  <textarea id="newsInput" placeholder="Paste headline or URL here..."></textarea>
+  <br>
+  <button onclick="checkFakeNews()">Check News</button>
+
+  <div id="output" class="result" style="display: none;"></div>
+
+  <script>
+    async function checkFakeNews() {
+      const input = document.getElementById('newsInput').value.trim();
+      const outputDiv = document.getElementById('output');
+
+      if (!input) {
+        alert("Please enter a headline or URL.");
+        return;
+      }
+
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = "⏳ Checking...";
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: input })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          outputDiv.innerHTML = "❌ Error: " + data.error;
+          outputDiv.className = "result fake";
+          return;
+        }
+
+        let resultHTML = `<strong>Prediction:</strong> <span>${data.prediction}</span>`;
+        if (data.extracted) {
+          resultHTML += `<br><br><strong>Extracted:</strong> <em>${data.extracted}</em>`;
+        }
+
+        outputDiv.innerHTML = resultHTML;
+        outputDiv.className = "result " + (data.prediction.toLowerCase() === "fake" ? "fake" : "real");
+
+      } catch (error) {
+        outputDiv.innerHTML = "❌ Error connecting to backend.";
+        outputDiv.className = "result fake";
+      }
+    }
+  </script>
+</body>
+</html>
