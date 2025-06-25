@@ -36,7 +36,6 @@ def search_and_scrape(query, top_k=5):
             continue
     return articles
 
-# Return score and matched URL with RAG verdict
 def get_rag_verdict(text, sbert_model, threshold=0.7):
     docs = search_and_scrape(text)
     if not docs:
@@ -58,7 +57,6 @@ def get_rag_verdict(text, sbert_model, threshold=0.7):
 
     return verdict, top_score, top_url
 
-# Load models
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src'))
 sbert_model = joblib.load(os.path.join(base_dir, 'sbert_model.joblib'))
 classifier_model = joblib.load(os.path.join(base_dir, 'classifier_model.joblib'))
@@ -66,7 +64,7 @@ label_encoder = joblib.load(os.path.join(base_dir, 'label_encoder.joblib'))
 
 @app.route('/')
 def home():
-    return 'credscanner backend (strict verdict) is running!'
+    return 'credscanner backend is running!'
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -83,16 +81,13 @@ def predict():
                 return jsonify({'error': 'Failed to extract text from URL'}), 400
             input_text = extracted
 
-        # Step 1: Predict using ML (still included but secondary)
         embedding = sbert_model.encode([input_text])
         prediction = classifier_model.predict(embedding)
         predicted_label = label_encoder.inverse_transform(prediction)[0]
 
-        # Step 2: Get similarity evidence
         rag_verdict, top_score, top_url = get_rag_verdict(input_text, sbert_model)
         threshold = 0.7
 
-        # Step 3: Strict REAL/FAKE based on RAG
         if top_score >= threshold:
             final_verdict = "REAL"
             explanation = f"✅ This claim is supported by strong online evidence (similarity: {top_score:.2f})."
