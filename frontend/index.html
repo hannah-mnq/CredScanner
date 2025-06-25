@@ -52,6 +52,80 @@
       opacity: 0.9;
     }
 
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .title-section {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .creator-info {
+      text-align: right;
+      opacity: 0.95;
+    }
+
+    .creator-label {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .creator-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .contact-links a {
+      color: white;
+      font-size: 1.1rem;
+      padding: 0.5rem;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+    }
+
+    .contact-links a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .title-section {
+        min-width: auto;
+      }
+      
+      .creator-info {
+        text-align: center;
+      }
+      
+      .contact-links {
+        justify-content: center;
+      }
+    }
+
     .main-content {
       padding: 2rem;
     }
@@ -269,8 +343,30 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1><i class="fas fa-shield-alt"></i> CredScanner</h1>
-      <p>AI-Powered Fake News Detection</p>
+      <div class="header-content">
+        <div class="title-section">
+          <h1><i class="fas fa-shield-alt"></i> CredScanner</h1>
+          <p>AI-Powered Fake News Detection</p>
+        </div>
+        <div class="creator-info">
+          <div class="creator-label">Created by</div>
+          <div class="creator-name">Hannah Mushtaque</div>
+          <div class="contact-links">
+            <a href="mailto:hannah.mushtaque@gmail.com" title="Email" aria-label="Email Hannah">
+              <i class="fas fa-envelope"></i>
+            </a>
+            <a href="tel:+917982517100" title="Phone" aria-label="Call Hannah">
+              <i class="fas fa-phone"></i>
+            </a>
+            <a href="https://linkedin.com/in/hannah-b38313192" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Hannah's LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/hannah-mnq" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="Hannah's GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="main-content">
@@ -325,8 +421,6 @@
         alert("Please enter a headline or URL.");
         return;
       }
-
-      // Show loading state
       outputDiv.style.display = 'block';
       outputDiv.innerHTML = '<div class="loading"><div class="spinner"></div> Analyzing news credibility...</div>';
       outputDiv.className = "result";
@@ -385,13 +479,10 @@
         </div>`;
         outputDiv.className = "result fake";
       } finally {
-        // Reset button state
         checkButton.disabled = false;
         buttonText.innerHTML = '<i class="fas fa-search"></i> Analyze News';
       }
     }
-
-    // Allow Enter key to trigger analysis
     document.getElementById('newsInput').addEventListener('keydown', function(event) {
       if (event.key === 'Enter' && event.ctrlKey) {
         checkFakeNews();
