@@ -1,0 +1,8 @@
+Flask
+flask-cors
+joblib
+newspaper3k
+sentence-transformers
+googlesearch-python
+scikit-learn
+torch
