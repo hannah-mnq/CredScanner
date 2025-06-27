@@ -44,7 +44,7 @@ CredScanner is an AI-powered fake news detection system that analyzes user-submi
    - Cosine similarity is computed between the input and each article.
 
 4. **Final Verdict**  
-   - If the highest similarity score exceeds a defined threshold (e.g., 0.7), the claim is considered supported.
+   - If the highest similarity score exceeds a defined threshold (e.g., 0.8), the claim is considered supported.
    - Otherwise, it is marked as unverified or potentially fake.
 
 ---
