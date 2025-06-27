@@ -36,7 +36,7 @@ def search_and_scrape(query, top_k=5):
             continue
     return articles
 
-def get_rag_verdict(text, sbert_model, threshold=0.7):
+def get_rag_verdict(text, sbert_model, threshold=0.8):
     docs = search_and_scrape(text)
     if not docs:
         return "No relevant sources found online.", 0.0, None
@@ -86,7 +86,7 @@ def predict():
         predicted_label = label_encoder.inverse_transform(prediction)[0]
 
         rag_verdict, top_score, top_url = get_rag_verdict(input_text, sbert_model)
-        threshold = 0.7
+        threshold = 0.8
 
         if top_score >= threshold:
             final_verdict = "REAL"
